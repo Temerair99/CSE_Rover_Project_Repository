@@ -12,20 +12,21 @@ const byte address[6] = "00001";
 void setup(){
   Serial.begin(9600);
   radio.begin();
-  radio.openReadingPipe();
+  radio.openReadingPipe(0, address);
   
 }
 void loop()
 { 
   //priority code
+  int dir;
   while(1){
     radio.startListening();
     if(radio.available()){//listen to controller
       while(radio.available()){
-        r = radio.read();
-        if(r != 0){
+        radio.read(&dir, sizeof(dir));
+        if(dir != 0){
           //taking controller input that is not 0
-          Serial.println(r);
+          Serial.println(dir);//input dirL here
           delayCount = 5;
         }
       }
@@ -39,7 +40,7 @@ void loop()
         delayCount = delayCount - 1;
       }else{
         //taking the pi input
-        r = Serial.read()
+        r = Serial.read();
         Serial.println(r);
         delay(500);
       }
@@ -48,4 +49,3 @@ void loop()
   //0-10 conditions below
   
 }
-
